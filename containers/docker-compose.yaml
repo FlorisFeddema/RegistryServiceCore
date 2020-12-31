@@ -1,0 +1,69 @@
+version: '3.9'
+
+services: 
+  registry:
+    restart: unless-stopped
+    image: registry:2
+    container_name: registry
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./certs:/certs
+    environment:
+      REGISTRY_HTTP_ADDR: :8081
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/domain.key
+      REGISTRY_HTTP_SECRET: hRLexzzZe2qJbkuMKhUet9DjvpNUYTq7
+      REGISTRY_STORAGE: s3
+      REGISTRY_STORAGE_S3_ACCESSKEY: zULeNdGAmeCAHmQjJfVgBZ7AZTSy8BLP
+      REGISTRY_STORAGE_S3_SECRETKEY: wGwt4Pr2Y9sCQUFCEYS7Ccn4FZT2kEn7
+      REGISTRY_STORAGE_S3_REGIONENDPOINT: http://minio:9000
+      REGISTRY_STORAGE_S3_BUCKET: registry
+      REGISTRY_STORAGE_S3_REGION: local
+      REGISTRY_STORAGE_S3_SECURE: "false"
+      REGISTRY_STORAGE_REDIRECT_DISABLE: "true"
+      REGISTRY_REDIS_ADDR: redis:6379
+      REGISTRY_REDIS_PASSWORD: ScjUY35BRvmpY5wvu6T6ryWtx9kuZLRP
+      REGISTRY_LOG_LEVEL: info
+
+  minio:
+    restart: unless-stopped
+    image: minio/minio
+    container_name: minio
+    volumes: 
+      - s3_data:/data
+    expose:
+      - 9000
+    environment:
+      MINIO_ACCESS_KEY: zULeNdGAmeCAHmQjJfVgBZ7AZTSy8BLP
+      MINIO_SECRET_KEY: wGwt4Pr2Y9sCQUFCEYS7Ccn4FZT2kEn7
+      MINIO_REGION_NAME: local
+    entrypoint: /bin/sh
+    command: -c 'mkdir -p /data/registry && /usr/bin/minio server /data'
+
+  redis:
+    restart: unless-stopped
+    image: redis:6.0.9
+    container_name: redis
+    expose: 
+      - 6379
+    command: redis-server --requirepass ScjUY35BRvmpY5wvu6T6ryWtx9kuZLRP
+
+  couchdb:
+    restart: unless-stopped
+    image: couchdb:3.1.1
+    container_name: couchdb
+    volumes:
+      - couchdb_data:/opt/couchdb/data
+      - ./local.ini:/opt/couchdb/etc/local.ini
+    expose:
+      - 5984
+    ports:
+      - "5984:5984"
+    environment:
+      COUCHDB_USER: E5wT5GjSJbaLUR9tRvnkYqW59XpAZbuB
+      COUCHDB_PASSWORD: FbxJYzPUM2tL4kkKYdQFmv5XdGUwDPKz
+
+volumes:
+  s3_data:
+  couchdb_data:
