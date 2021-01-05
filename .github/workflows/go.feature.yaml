@@ -6,20 +6,20 @@ on:
       - feature/*
 
 jobs:
-#  sonar:
-#    name: SonarQube
-#    runs-on: ubuntu-18.04
-#    steps:
-#
-#      - name: Git checkout
-#        uses: actions/checkout@v2
-#
-#      - name: SonarCloud scan
-#        uses:  kitabisa/sonarqube-action@master
-#        with:
-#          projectBaseDir: .
-#          host: ${{ secrets.SONARQUBE_HOST }}
-#          login: ${{ secrets.SONARQUBE_TOKEN }}
+  sonar:
+    name: SonarQube
+    runs-on: ubuntu-18.04
+    steps:
+
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: SonarCloud scan
+        uses:  kitabisa/sonarqube-action@master
+        with:
+          projectBaseDir: .
+          host: ${{ secrets.SONARQUBE_HOST }}
+          login: ${{ secrets.SONARQUBE_TOKEN }}
 
   build:
     name: Build
