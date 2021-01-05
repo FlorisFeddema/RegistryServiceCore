@@ -70,6 +70,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: registryproxy/coreservice:${{github.sha}}
+          tags: harbor.cloud.feddema.dev/registryproxy/coreservice:${{github.sha}}
           context: .
           file: ./Dockerfile
