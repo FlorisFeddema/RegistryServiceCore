@@ -3,8 +3,7 @@ name: Go feature
 on:
   push:
     branches:
-#      - feature/*
-      - develop
+      - feature/*
 jobs:
   sonar:
     name: SonarQube
