@@ -62,3 +62,5 @@ jobs:
           registry: harbor.cloud.feddema.dev
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
