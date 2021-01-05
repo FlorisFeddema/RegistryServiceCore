@@ -12,6 +12,8 @@ LABEL org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.docker.dockerfile="/Dockerfile"
 
+ENV GIN_MODE=release
+
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
