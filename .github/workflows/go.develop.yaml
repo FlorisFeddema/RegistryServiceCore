@@ -78,7 +78,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: harbor.cloud.feddema.dev/registryproxy/coreservice:${{github.sha}}
+          tags: |
+            harbor.cloud.feddema.dev/registryproxy/coreservice:${{github.sha}}
+            harbor.cloud.feddema.dev/registryproxy/coreservice:dev
           context: .
           file: ./Dockerfile
           cache-from: type=local,src=/tmp/.buildx-cache
