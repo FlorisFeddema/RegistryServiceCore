@@ -50,7 +50,7 @@ jobs:
 
   deliver:
     name: Deliver
-    needs: [build, sonar]
+#    needs: [build, sonar]
     runs-on: ubuntu-18.04
     container: ubuntu-18.04
     steps:
