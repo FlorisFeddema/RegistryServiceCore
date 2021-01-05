@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/*
+      - develop
 
 jobs:
   sonar:
@@ -46,3 +47,19 @@ jobs:
 
       - name: Test
         run: go test -v
+
+  deliver:
+    needs: [build, sonar]
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Kaniko docker image build
+        uses: aevea/action-kaniko@master
+        with:
+          image: RegistryProxy/CoreService
+          tag: ${GITHUB_SHA::8}
+          registry: harbor.cloud.feddema.dev
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
