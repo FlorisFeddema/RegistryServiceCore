@@ -3,9 +3,12 @@ module CoreService
 go 1.15
 
 require (
-	github.com/couchbase/gocb/v2 v2.2.0 // indirect
 	github.com/getsentry/sentry-go v0.9.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
+	github.com/google/uuid v1.1.4
 	github.com/ilyakaznacheev/cleanenv v1.2.5
+	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
+	gorm.io/driver/postgres v1.0.6
+	gorm.io/gorm v1.20.11
 )
