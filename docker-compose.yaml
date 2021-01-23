@@ -64,6 +64,40 @@ services:
     ports:
       - "5432:5432"
 
+  mariadb:
+    restart: unless-stopped
+    image: mariadb:10.5
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: CoreService
+      MYSQL_USER: Q2TXf8UyR36Jy4CmRK4c6sGx9rKnEkuj
+      MYSQL_PASSWORD: wd8HSPCX7j9LXFdzUvYZL8zqg3xgV2ET
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+
+  clickhouse:
+    restart: unless-stopped
+    image: yandex/clickhouse-server:20.8
+    container_name: clickhouse
+    volumes:
+    - clickhouse_data:/var/lib/clickhouse
+    expose:
+      - 8123
+      - 9000
+    ports:
+    - "9001:9000"
+    - "8123:8123"
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 262144
+        hard: 262144
+
   adminer:
     restart: unless-stopped
     image: adminer:4.7
@@ -77,3 +111,5 @@ services:
 volumes:
   s3_data:
   postgres_data:
+  mariadb_data:
+  clickhouse_data:

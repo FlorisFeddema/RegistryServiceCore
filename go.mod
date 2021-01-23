@@ -9,6 +9,7 @@ require (
 	github.com/google/uuid v1.1.4
 	github.com/ilyakaznacheev/cleanenv v1.2.5
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a
+	gorm.io/driver/mysql v1.0.3
 	gorm.io/driver/postgres v1.0.6
 	gorm.io/gorm v1.20.11
 )
