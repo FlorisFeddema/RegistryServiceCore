@@ -2,27 +2,25 @@ package server
 
 import (
 	"CoreService/src/util"
-	"fmt"
 	"github.com/getsentry/sentry-go"
 	sentryGin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func InitMiddleware(router *gin.Engine)  {
-	setRecovery(router)
 	setLogger(router)
 	setCors(router)
 	setSentry(router)
 	setRoutes(router)
 }
 
-func setRecovery(router *gin.Engine)  {
-	router.Use(gin.Recovery())
-}
 
 func setLogger(router *gin.Engine)  {
-	router.Use(gin.Logger())
+	router.Use(ginzap.Ginzap(util.Logger(), time.RFC3339, true))
+	router.Use(gin.Recovery())
 }
 
 func setCors(router *gin.Engine)  {
@@ -35,15 +33,17 @@ func setCors(router *gin.Engine)  {
 }
 
 func setSentry(router *gin.Engine) {
-	dsn := util.GetConfig().Dsn
+	dsn := util.GetConfig().Sentry.Dsn
 	if len(dsn) == 0 {
 		return
 	}
 
+	util.Logger().Info("Setting up connection with Sentry")
+
 	if err := sentry.Init(sentry.ClientOptions{
 		Dsn: "",
 	}); err != nil {
-		fmt.Printf("Sentry initialization failed: %v\n", err)
+		util.Logger().Fatal(err.Error())
 	}
 
 	router.Use(sentryGin.New(sentryGin.Options{

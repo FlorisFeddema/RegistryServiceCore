@@ -1,0 +1,15 @@
+server:
+  http:
+    port: 8082
+    mode: production
+
+database:
+  type: postgresql
+  host: localhost
+  port: 5432
+  username: cbE8Eg2ukBD7u6yxuhXkqZb8vCS3bhCN
+  password: 29q4wSumbF3QG2wEaAtynKNtvcEf4nfc
+  name: CoreService
+
+sentry:
+  dsn: ""

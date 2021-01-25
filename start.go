@@ -6,22 +6,22 @@ import (
 	"CoreService/src/util"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
-	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 var g errgroup.Group
 
 func main() {
-
-
+	util.SetupLogger()
+	setMode()
 	g.Go(func() error {
 		r := gin.New()
 		server.InitMiddleware(r)
 
 		s := &http.Server{
-			Addr: ":" + util.GetConfig().Port,
+			Addr: ":" + strconv.Itoa(util.GetConfig().Server.Http.Port),
 			Handler: r,
 			ReadTimeout: 10 * time.Second,
 			WriteTimeout: 10 * time.Second,
@@ -30,11 +30,23 @@ func main() {
 	})
 
 	g.Go(func() error {
-		repository.Connect()
+		repository.SetupConnection()
 		return nil
 	})
 
 	if err := g.Wait(); err != nil {
-		log.Fatal(err)
+		util.Logger().Fatal(err.Error())
 	}
+}
+
+func setMode() {
+	mode := util.GetConfig().Server.Http.Mode
+	if mode == "debug" {
+		gin.SetMode(gin.DebugMode)
+	} else if mode == "test" {
+		gin.SetMode(gin.TestMode)
+ 	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	util.Logger().Info("Http server is running in " + gin.Mode() + " mode")
 }
