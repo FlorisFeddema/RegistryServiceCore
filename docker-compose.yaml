@@ -17,7 +17,7 @@ services:
       REGISTRY_STORAGE: s3
       REGISTRY_STORAGE_S3_ACCESSKEY: zULeNdGAmeCAHmQjJfVgBZ7AZTSy8BLP
       REGISTRY_STORAGE_S3_SECRETKEY: wGwt4Pr2Y9sCQUFCEYS7Ccn4FZT2kEn7
-      REGISTRY_STORAGE_S3_REGIONENDPOINT: http://minio:9000
+      REGISTRY_STORAGE_S3_REGIONENDPOINT: server://minio:9000
       REGISTRY_STORAGE_S3_BUCKET: registry
       REGISTRY_STORAGE_S3_REGION: local
       REGISTRY_STORAGE_S3_SECURE: "false"
@@ -43,27 +43,55 @@ services:
 
   redis:
     restart: unless-stopped
-    image: redis:6.0.9
+    image: redis:6.0-alpine
     container_name: redis
     expose: 
       - 6379
     command: redis-server --requirepass ScjUY35BRvmpY5wvu6T6ryWtx9kuZLRP
 
-  couchdb:
+  postgres:
     restart: unless-stopped
-    image: couchdb:3.1.1
-    container_name: couchdb
+    image: postgres:13-alpine
+    container_name: postgres
     volumes:
-      - couchdb_data:/opt/couchdb/data
-      - ./local.ini:/opt/couchdb/etc/local.ini
-    expose:
-      - 5984
-    ports:
-      - "5984:5984"
+      - postgres_data:/var/lib/postgresql/data/
     environment:
-      COUCHDB_USER: E5wT5GjSJbaLUR9tRvnkYqW59XpAZbuB
-      COUCHDB_PASSWORD: FbxJYzPUM2tL4kkKYdQFmv5XdGUwDPKz
+      POSTGRES_USER: cbE8Eg2ukBD7u6yxuhXkqZb8vCS3bhCN
+      POSTGRES_PASSWORD: 29q4wSumbF3QG2wEaAtynKNtvcEf4nfc
+      POSTGRES_DB: CoreService
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+
+  mariadb:
+    restart: unless-stopped
+    image: mariadb:10.5
+    container_name: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: CoreService
+      MYSQL_USER: Q2TXf8UyR36Jy4CmRK4c6sGx9rKnEkuj
+      MYSQL_PASSWORD: wd8HSPCX7j9LXFdzUvYZL8zqg3xgV2ET
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+
+  adminer:
+    restart: unless-stopped
+    image: adminer:4.7
+    container_name: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: price
+    ports:
+      - 8080:8080
 
 volumes:
   s3_data:
-  couchdb_data:
+  postgres_data:
+  mariadb_data:
+  clickhouse_data:
