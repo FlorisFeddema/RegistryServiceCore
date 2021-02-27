@@ -1,6 +1,7 @@
 package main
 
 import (
+	"CoreService/src/registry"
 	"CoreService/src/repository"
 	"CoreService/src/server"
 	"CoreService/src/util"
@@ -31,6 +32,9 @@ func main() {
 
 	g.Go(func() error {
 		repository.SetupConnection()
+		repository.CreateDatabases()
+		repository.CreateImage()
+		registry.Test()
 		return nil
 	})
 

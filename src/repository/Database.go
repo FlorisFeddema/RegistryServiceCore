@@ -4,6 +4,7 @@ import (
 	"CoreService/src/util"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -12,8 +13,29 @@ import (
 	"time"
 )
 
+type Base struct {
+	ID			uuid.UUID	`gorm:"type:uuid;primary_key;unique;default:uuid_generate_v4()"`
+	CreatedAt	time.Time
+	UpdatedAt	time.Time
+	DeletedAt	*time.Time	`sql:"index"`
+}
+
+var db *gorm.DB
+
+func GetDatabase() *gorm.DB {
+	if db == nil {
+		SetupConnection()
+	}
+	return db
+}
+
+func CreateDatabases()  {
+	db.AutoMigrate(&Image{})
+}
+
 func SetupConnection()  {
-	db, err := setup()
+	var err error
+	db, err = setup()
 	if err != nil {
 		util.Logger().Fatal(err.Error())
 	}
