@@ -3,18 +3,20 @@ package repository
 import (
 	"CoreService/src/util"
 	"fmt"
+	"time"
 )
 
-type Image struct {
+type Registry struct {
 	Base
-	Name 	string
+	Name 		string
+	LastUsed	time.Time
 }
 
-func CreateImage()  {
-	image := Image{Name: "NGINX"}
+func CreateRegistry()  {
+	registry := Registry{Name: "NGINX"}
 	db := GetDatabase()
 
-	result := db.Create(&image)
+	result := db.Create(&registry)
 
 	util.Logger().Info(fmt.Sprintf("Rows affected: %d", result.RowsAffected))
 }

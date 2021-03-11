@@ -30,6 +30,9 @@ services:
       REGISTRY_AUTH: htpasswd
       REGISTRY_AUTH_HTPASSWD_REALM: Registry
       REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+    depends_on:
+      - minio
+      - redis
 
   minio:
     restart: unless-stopped
@@ -100,4 +103,3 @@ volumes:
   s3_data:
   postgres_data:
   mariadb_data:
-  clickhouse_data:

@@ -33,7 +33,7 @@ func main() {
 	g.Go(func() error {
 		repository.SetupConnection()
 		repository.CreateDatabases()
-		repository.CreateImage()
+		repository.CreateRegistry()
 		registry.Test()
 		return nil
 	})

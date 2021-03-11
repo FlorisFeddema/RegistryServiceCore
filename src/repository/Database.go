@@ -30,7 +30,7 @@ func GetDatabase() *gorm.DB {
 }
 
 func CreateDatabases()  {
-	db.AutoMigrate(&Image{})
+	db.AutoMigrate(&Registry{})
 }
 
 func SetupConnection()  {
