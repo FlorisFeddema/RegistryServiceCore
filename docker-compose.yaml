@@ -6,31 +6,39 @@ services:
     image: registry:2
     container_name: registry
     ports:
-      - "8081:8081"
+      - "5001:5001"
     volumes:
       - ./certs:/certs
+      - ./auth:/auth
     environment:
-      REGISTRY_HTTP_ADDR: :8081
+      REGISTRY_HTTP_ADDR: ":5001"
       REGISTRY_HTTP_TLS_CERTIFICATE: /certs/domain.crt
       REGISTRY_HTTP_TLS_KEY: /certs/domain.key
       REGISTRY_HTTP_SECRET: hRLexzzZe2qJbkuMKhUet9DjvpNUYTq7
       REGISTRY_STORAGE: s3
       REGISTRY_STORAGE_S3_ACCESSKEY: zULeNdGAmeCAHmQjJfVgBZ7AZTSy8BLP
       REGISTRY_STORAGE_S3_SECRETKEY: wGwt4Pr2Y9sCQUFCEYS7Ccn4FZT2kEn7
-      REGISTRY_STORAGE_S3_REGIONENDPOINT: server://minio:9000
+      REGISTRY_STORAGE_S3_REGIONENDPOINT: minio:9000
       REGISTRY_STORAGE_S3_BUCKET: registry
       REGISTRY_STORAGE_S3_REGION: local
       REGISTRY_STORAGE_S3_SECURE: "false"
       REGISTRY_STORAGE_REDIRECT_DISABLE: "true"
       REGISTRY_REDIS_ADDR: redis:6379
       REGISTRY_REDIS_PASSWORD: ScjUY35BRvmpY5wvu6T6ryWtx9kuZLRP
+      REGISTRY_STORAGE_CACHE_BLOBDESCRIPTOR: redis
       REGISTRY_LOG_LEVEL: info
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: Registry
+      REGISTRY_AUTH_HTPASSWD_PATH: /auth/htpasswd
+    depends_on:
+      - minio
+      - redis
 
   minio:
     restart: unless-stopped
     image: minio/minio
     container_name: minio
-    volumes: 
+    volumes:
       - s3_data:/data
     expose:
       - 9000
@@ -45,7 +53,7 @@ services:
     restart: unless-stopped
     image: redis:6.0-alpine
     container_name: redis
-    expose: 
+    expose:
       - 6379
     command: redis-server --requirepass ScjUY35BRvmpY5wvu6T6ryWtx9kuZLRP
 
@@ -55,6 +63,7 @@ services:
     container_name: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - ./postgres_scripts:/docker-entrypoint-initdb.d
     environment:
       POSTGRES_USER: cbE8Eg2ukBD7u6yxuhXkqZb8vCS3bhCN
       POSTGRES_PASSWORD: 29q4wSumbF3QG2wEaAtynKNtvcEf4nfc
@@ -94,4 +103,3 @@ volumes:
   s3_data:
   postgres_data:
   mariadb_data:
-  clickhouse_data:

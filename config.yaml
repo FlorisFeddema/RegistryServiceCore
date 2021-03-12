@@ -11,5 +11,11 @@ database:
   password: 29q4wSumbF3QG2wEaAtynKNtvcEf4nfc
   name: CoreService
 
+registry:
+  host: localhost
+  port: 5001
+  username: HerMBujLXjt7PhUcENjmyGT8PJmdCYcY
+  password: K6WSUNxFELBM2WZRF86Lx72g5FREUrym
+
 sentry:
   dsn: ""
